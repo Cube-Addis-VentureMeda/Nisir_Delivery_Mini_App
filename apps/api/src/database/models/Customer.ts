@@ -9,8 +9,10 @@ export interface CustomerAttributes {
   lastName: string | null;
   phone: string | null;
   status: 'active' | 'suspended' | 'inactive';
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-export interface CustomerCreation extends Optional<CustomerAttributes, 'id'> {}
+export interface CustomerCreation extends Optional<CustomerAttributes, 'id' | 'status'> {}
 
 export class Customer extends Model<CustomerAttributes, CustomerCreation> implements CustomerAttributes {
   declare id: string;
@@ -19,6 +21,8 @@ export class Customer extends Model<CustomerAttributes, CustomerCreation> implem
   declare lastName: string | null;
   declare phone: string | null;
   declare status: 'active' | 'suspended' | 'inactive';
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 Customer.init(
@@ -30,5 +34,5 @@ Customer.init(
     phone:     { type: DataTypes.STRING(30),  allowNull: true },
     status:    { type: DataTypes.ENUM('active', 'suspended', 'inactive'), allowNull: false, defaultValue: 'active' },
   },
-  { sequelize, tableName: 'customers', underscored: true },
+  { sequelize, tableName: 'customers', underscored: true, timestamps: true },
 );

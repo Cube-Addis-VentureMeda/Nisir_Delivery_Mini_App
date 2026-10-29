@@ -23,7 +23,11 @@ export default {
       ALTER TABLE merchant_payout_items
       ADD CONSTRAINT chk_payout_item_amount_positive CHECK (amount_applied > 0)
     `);
-    // Over-settlement (Issue #6) is prevented in the service with row locks + running sums.
+    await queryInterface.addIndex('merchant_payout_items', ['merchant_payout_id', 'merchant_order_id'], {
+      unique: true,
+      name: 'uq_payout_merchant_order',
+    });
+    // Remaining outstanding is computed from active (pending/processing/paid) items.
   },
   async down(queryInterface: QueryInterface) {
     await queryInterface.dropTable('merchant_payout_items');

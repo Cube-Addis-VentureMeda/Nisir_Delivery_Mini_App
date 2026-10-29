@@ -7,6 +7,7 @@ export interface MerchantPayoutItemAttributes {
   merchantPayoutId: string;
   merchantOrderId: string;
   amountApplied: string;
+  createdAt?: Date;
 }
 export interface MerchantPayoutItemCreation extends Optional<MerchantPayoutItemAttributes, 'id'> {}
 
@@ -16,6 +17,7 @@ export class MerchantPayoutItem extends Model<MerchantPayoutItemAttributes, Merc
   declare merchantPayoutId: string;
   declare merchantOrderId: string;
   declare amountApplied: string;
+  declare createdAt: Date;
 }
 
 MerchantPayoutItem.init(
@@ -25,5 +27,12 @@ MerchantPayoutItem.init(
     merchantOrderId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: false },
     amountApplied:   { type: DataTypes.DECIMAL(12, 2), allowNull: false },
   },
-  { sequelize, tableName: 'merchant_payout_items', underscored: true, updatedAt: false },
+  {
+    sequelize,
+    tableName: 'merchant_payout_items',
+    underscored: true,
+    timestamps: true,
+    updatedAt: false,
+    indexes: [{ unique: true, fields: ['merchantPayoutId', 'merchantOrderId'], name: 'uq_payout_merchant_order' }],
+  },
 );

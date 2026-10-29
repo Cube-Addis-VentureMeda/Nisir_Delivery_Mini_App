@@ -13,6 +13,8 @@ export interface MerchantOrderAttributes {
   restaurantServiceAmount: string;
   merchantPayableAmount: string;
   payoutStatus: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface MerchantOrderCreation extends Optional<MerchantOrderAttributes, 'id'> {}
 
@@ -29,6 +31,8 @@ export class MerchantOrder extends Model<MerchantOrderAttributes, MerchantOrderC
   declare restaurantServiceAmount: string;
   declare merchantPayableAmount: string;
   declare payoutStatus: string;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 MerchantOrder.init(
@@ -47,5 +51,5 @@ MerchantOrder.init(
     merchantPayableAmount:    { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     payoutStatus:             { type: DataTypes.STRING(30), allowNull: false, defaultValue: 'unsettled' },
   },
-  { sequelize, tableName: 'merchant_orders', underscored: true },
+  { sequelize, tableName: 'merchant_orders', underscored: true, timestamps: true },
 );

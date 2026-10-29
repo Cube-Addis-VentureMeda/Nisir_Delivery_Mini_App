@@ -16,6 +16,9 @@ export interface CustomerPaymentAttributes {
   currency: string;
   status: PaymentStatus;
   paidAt: Date | null;
+  confirmedByStaffId: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface CustomerPaymentCreation extends Optional<CustomerPaymentAttributes, 'id'> {}
 
@@ -32,6 +35,9 @@ export class CustomerPayment extends Model<CustomerPaymentAttributes, CustomerPa
   declare currency: string;
   declare status: PaymentStatus;
   declare paidAt: Date | null;
+  declare confirmedByStaffId: string | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 CustomerPayment.init(
@@ -50,6 +56,7 @@ CustomerPayment.init(
       allowNull: false, defaultValue: 'pending',
     },
     paidAt: { type: DataTypes.DATE, allowNull: true },
+    confirmedByStaffId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
   },
-  { sequelize, tableName: 'customer_payments', underscored: true },
+  { sequelize, tableName: 'customer_payments', underscored: true, timestamps: true },
 );

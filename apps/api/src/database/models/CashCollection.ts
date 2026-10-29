@@ -11,6 +11,8 @@ export interface CashCollectionAttributes {
   status: 'pending' | 'collected' | 'partially_handed_over' | 'handed_over' | 'disputed';
   collectedAt: Date | null;
   discrepancyNote: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface CashCollectionCreation extends Optional<CashCollectionAttributes, 'id'> {}
 
@@ -24,6 +26,8 @@ export class CashCollection extends Model<CashCollectionAttributes, CashCollecti
   declare status: CashCollectionAttributes['status'];
   declare collectedAt: Date | null;
   declare discrepancyNote: string | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 CashCollection.init(
@@ -40,5 +44,5 @@ CashCollection.init(
     collectedAt:     { type: DataTypes.DATE, allowNull: true },
     discrepancyNote: { type: DataTypes.TEXT, allowNull: true },
   },
-  { sequelize, tableName: 'cash_collections', underscored: true },
+  { sequelize, tableName: 'cash_collections', underscored: true, timestamps: true },
 );

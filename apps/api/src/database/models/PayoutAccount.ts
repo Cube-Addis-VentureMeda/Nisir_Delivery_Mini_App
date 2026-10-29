@@ -14,6 +14,8 @@ export interface PayoutAccountAttributes {
   isDefault: boolean;
   status: 'pending_verification' | 'verified' | 'disabled';
   verifiedAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface PayoutAccountCreation extends Optional<PayoutAccountAttributes, 'id'> {}
 
@@ -30,6 +32,8 @@ export class PayoutAccount extends Model<PayoutAccountAttributes, PayoutAccountC
   declare isDefault: boolean;
   declare status: PayoutAccountAttributes['status'];
   declare verifiedAt: Date | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 PayoutAccount.init(
@@ -52,5 +56,19 @@ PayoutAccount.init(
     },
     verifiedAt: { type: DataTypes.DATE, allowNull: true },
   },
-  { sequelize, tableName: 'payout_accounts', underscored: true },
+  {
+    sequelize,
+    tableName: 'payout_accounts',
+    underscored: true,
+    timestamps: true,
+    validate: {
+      exactlyOneOwner() {
+        const hasMerchant = this.merchantId != null && this.merchantId !== '';
+        const hasDriver = this.driverId != null && this.driverId !== '';
+        if (hasMerchant === hasDriver) {
+          throw new Error('Payout account must belong to exactly one of merchant or driver');
+        }
+      },
+    },
+  },
 );

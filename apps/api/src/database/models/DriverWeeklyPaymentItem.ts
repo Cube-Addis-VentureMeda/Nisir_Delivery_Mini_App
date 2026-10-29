@@ -7,6 +7,7 @@ export interface DriverWeeklyPaymentItemAttributes {
   driverWeeklyPaymentId: string;
   orderId: string; // UNIQUE — one order paid at most once, enforced by DB
   earningAmount: string;
+  createdAt?: Date;
 }
 export interface DriverWeeklyPaymentItemCreation extends Optional<DriverWeeklyPaymentItemAttributes, 'id'> {}
 
@@ -16,6 +17,7 @@ export class DriverWeeklyPaymentItem extends Model<DriverWeeklyPaymentItemAttrib
   declare driverWeeklyPaymentId: string;
   declare orderId: string;
   declare earningAmount: string;
+  declare createdAt: Date;
 }
 
 DriverWeeklyPaymentItem.init(
@@ -28,5 +30,5 @@ DriverWeeklyPaymentItem.init(
     },
     earningAmount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
   },
-  { sequelize, tableName: 'driver_weekly_payment_items', underscored: true, updatedAt: false },
+  { sequelize, tableName: 'driver_weekly_payment_items', underscored: true, timestamps: true, updatedAt: false },
 );

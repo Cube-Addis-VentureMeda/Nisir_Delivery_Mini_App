@@ -15,6 +15,8 @@ export interface MerchantAttributes {
   status: 'pending' | 'active' | 'suspended' | 'inactive';
   isPartner: boolean;        // ← THE flag that drives fee logic
   partnerSince: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface MerchantCreation extends Optional<MerchantAttributes, 'id'> {}
 
@@ -31,6 +33,8 @@ export class Merchant extends Model<MerchantAttributes, MerchantCreation> implem
   declare status: MerchantAttributes['status'];
   declare isPartner: boolean;
   declare partnerSince: Date | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 Merchant.init(
@@ -48,5 +52,5 @@ Merchant.init(
     isPartner:    { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     partnerSince: { type: DataTypes.DATE, allowNull: true },
   },
-  { sequelize, tableName: 'merchants', underscored: true },
+  { sequelize, tableName: 'merchants', underscored: true, timestamps: true },
 );

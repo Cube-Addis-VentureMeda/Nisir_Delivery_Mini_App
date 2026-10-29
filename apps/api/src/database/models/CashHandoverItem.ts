@@ -7,6 +7,7 @@ export interface CashHandoverItemAttributes {
   cashHandoverId: string;
   cashCollectionId: string;
   amountApplied: string;
+  createdAt?: Date;
 }
 export interface CashHandoverItemCreation extends Optional<CashHandoverItemAttributes, 'id'> {}
 
@@ -16,6 +17,7 @@ export class CashHandoverItem extends Model<CashHandoverItemAttributes, CashHand
   declare cashHandoverId: string;
   declare cashCollectionId: string;
   declare amountApplied: string;
+  declare createdAt: Date;
 }
 
 CashHandoverItem.init(
@@ -25,5 +27,5 @@ CashHandoverItem.init(
     cashCollectionId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: false },
     amountApplied:    { type: DataTypes.DECIMAL(12, 2), allowNull: false },
   },
-  { sequelize, tableName: 'cash_handover_items', underscored: true, updatedAt: false },
+  { sequelize, tableName: 'cash_handover_items', underscored: true, timestamps: true, updatedAt: false },
 );

@@ -15,10 +15,14 @@ export default {
         type: DataTypes.BIGINT.UNSIGNED, allowNull: false,
         references: { model: 'orders', key: 'id' },
         onUpdate: 'CASCADE', onDelete: 'RESTRICT',
-        unique: 'uniq_order_in_weekly_payment',
       },
       earning_amount: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
       created_at: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+    });
+
+    await queryInterface.addIndex('driver_weekly_payment_items', ['order_id'], {
+      unique: true,
+      name: 'uniq_order_in_weekly_payment',
     });
   },
   async down(queryInterface: QueryInterface) {

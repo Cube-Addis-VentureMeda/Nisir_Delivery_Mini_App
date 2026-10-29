@@ -19,6 +19,10 @@ import m016 from './016-merchant-payouts';
 import m017 from './017-merchant-payout-items';
 import m018 from './018-driver-weekly-payments';
 import m019 from './019-driver-weekly-payment-items';
+import m020 from './020-driver-telegram';
+import m021 from './021-payment-method-and-idempotency';
+import m022 from './022-staff-roles';
+import m023 from './023-payment-audit-staff';
 
 export interface Migration {
   name: string;
@@ -28,5 +32,5 @@ export interface Migration {
 
 export const migrations: Migration[] = [
   m001, m002, m003, m004, m005, m006, m007, m008, m009,
-  m010, m011, m012, m013, m014, m015, m016, m017, m018, m019,
+  m010, m011, m012, m013, m014, m015, m016, m017, m018, m019, m020, m021, m022, m023,
 ];

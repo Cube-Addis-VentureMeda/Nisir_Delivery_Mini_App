@@ -12,11 +12,13 @@ export interface MerchantPayoutAttributes {
   currency: string;
   status: FinancialStatus;
   paymentReference: string | null;
-  destinationSnapshot: string | null; // JSON string, frozen at approval
+  destinationSnapshot: string; // JSON string, frozen at approval. pending status is unused; createPayout writes processing.
   approvedByStaffId: string | null;
   paidByStaffId: string | null;
   approvedAt: Date | null;
   paidAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface MerchantPayoutCreation extends Optional<MerchantPayoutAttributes, 'id'> {}
 
@@ -29,11 +31,13 @@ export class MerchantPayout extends Model<MerchantPayoutAttributes, MerchantPayo
   declare currency: string;
   declare status: FinancialStatus;
   declare paymentReference: string | null;
-  declare destinationSnapshot: string | null;
+  declare destinationSnapshot: string;
   declare approvedByStaffId: string | null;
   declare paidByStaffId: string | null;
   declare approvedAt: Date | null;
   declare paidAt: Date | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 MerchantPayout.init(
@@ -48,11 +52,12 @@ MerchantPayout.init(
       allowNull: false, defaultValue: 'pending',
     },
     paymentReference:    { type: DataTypes.STRING(100), allowNull: true, unique: true },
-    destinationSnapshot: { type: DataTypes.TEXT, allowNull: true },
+    // JSON stored as TEXT. Shape is frozen by the service at approval (createPayout).
+    destinationSnapshot: { type: DataTypes.TEXT, allowNull: false },
     approvedByStaffId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     paidByStaffId:     { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     approvedAt: { type: DataTypes.DATE, allowNull: true },
     paidAt:     { type: DataTypes.DATE, allowNull: true },
   },
-  { sequelize, tableName: 'merchant_payouts', underscored: true },
+  { sequelize, tableName: 'merchant_payouts', underscored: true, timestamps: true },
 );

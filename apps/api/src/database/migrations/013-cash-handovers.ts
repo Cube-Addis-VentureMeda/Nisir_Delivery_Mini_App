@@ -12,12 +12,12 @@ export default {
         onUpdate: 'CASCADE', onDelete: 'RESTRICT',
       },
       received_by_staff_id: {
-        type: DataTypes.BIGINT.UNSIGNED, allowNull: false,
+        type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
         references: { model: 'staff_users', key: 'id' },
         onUpdate: 'CASCADE', onDelete: 'RESTRICT',
       },
       amount_declared: { type: DataTypes.DECIMAL(12, 2), allowNull: false }, // driver says "I have X"
-      amount_verified: { type: DataTypes.DECIMAL(12, 2), allowNull: false }, // staff counts and confirms
+      amount_verified: { type: DataTypes.DECIMAL(12, 2), allowNull: true }, // staff counts and confirms on verification
       status: {
         type: DataTypes.ENUM('submitted', 'verified', 'rejected'),
         allowNull: false, defaultValue: 'submitted',

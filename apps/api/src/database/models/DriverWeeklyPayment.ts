@@ -14,8 +14,11 @@ export interface DriverWeeklyPaymentAttributes {
   payoutAccountId: string | null;
   paymentReference: string | null;
   destinationSnapshot: string | null;
+  generatedByStaffId: string | null;
   paidByStaffId: string | null;
   paidAt: Date | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface DriverWeeklyPaymentCreation extends Optional<DriverWeeklyPaymentAttributes, 'id'> {}
 
@@ -31,8 +34,11 @@ export class DriverWeeklyPayment extends Model<DriverWeeklyPaymentAttributes, Dr
   declare payoutAccountId: string | null;
   declare paymentReference: string | null;
   declare destinationSnapshot: string | null;
+  declare generatedByStaffId: string | null;
   declare paidByStaffId: string | null;
   declare paidAt: Date | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 DriverWeeklyPayment.init(
@@ -50,8 +56,9 @@ DriverWeeklyPayment.init(
     payoutAccountId:     { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     paymentReference:    { type: DataTypes.STRING(100), allowNull: true, unique: true },
     destinationSnapshot: { type: DataTypes.TEXT, allowNull: true },
+    generatedByStaffId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     paidByStaffId: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     paidAt:        { type: DataTypes.DATE, allowNull: true },
   },
-  { sequelize, tableName: 'driver_weekly_payments', underscored: true },
+  { sequelize, tableName: 'driver_weekly_payments', underscored: true, timestamps: true },
 );

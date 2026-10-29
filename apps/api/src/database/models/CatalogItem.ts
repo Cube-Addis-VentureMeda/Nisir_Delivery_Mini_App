@@ -1,5 +1,6 @@
 // src/database/models/CatalogItem.ts
-import { DataTypes, Model, Optional } from 'sequelize';
+import { Model, DataTypes, Optional, NonAttribute } from 'sequelize';
+import type { Merchant } from './Merchant';
 import { sequelize } from '../../config/database';
 
 export interface CatalogItemAttributes {
@@ -10,6 +11,8 @@ export interface CatalogItemAttributes {
   imageUrl: string | null;
   currentPrice: string;
   isAvailable: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 export interface CatalogItemCreation extends Optional<CatalogItemAttributes, 'id'> {}
 
@@ -21,6 +24,9 @@ export class CatalogItem extends Model<CatalogItemAttributes, CatalogItemCreatio
   declare imageUrl: string | null;
   declare currentPrice: string;
   declare isAvailable: boolean;
+  declare merchant?: NonAttribute<Merchant>;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 CatalogItem.init(
@@ -33,5 +39,5 @@ CatalogItem.init(
     currentPrice: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     isAvailable:  { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
   },
-  { sequelize, tableName: 'catalog_items', underscored: true },
+  { sequelize, tableName: 'catalog_items', underscored: true, timestamps: true },
 );

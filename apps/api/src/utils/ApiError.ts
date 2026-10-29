@@ -11,6 +11,9 @@ export class ApiError extends Error {
   }
 
 
+  static badRequest(msg: string, details?: unknown) {
+    return new ApiError(400, 'BAD_REQUEST', msg, details);
+  }
   static notFound(msg = 'Resource not found') {
     return new ApiError(404, 'NOT_FOUND', msg);
   }
@@ -23,4 +26,7 @@ export class ApiError extends Error {
   static pricingUnavailable() {
     return new ApiError(503, 'PRICING_UNAVAILABLE', 'Pricing is temporarily unavailable. Please try again shortly.');
   }
+  static forbidden(msg = 'Access denied') {
+  return new ApiError(403, 'FORBIDDEN', msg);
+}
 }

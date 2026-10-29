@@ -10,8 +10,12 @@ export interface DriverAttributes {
   passwordHash: string;
   status: 'active' | 'suspended' | 'inactive';
   isAvailable: boolean;
+  telegramUserId: string | null;
+  telegramChatId: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-export interface DriverCreation extends Optional<DriverAttributes, 'id' | 'email' | 'isAvailable'> {}
+export interface DriverCreation extends Optional<DriverAttributes, 'id' | 'email' | 'isAvailable' | 'telegramUserId' | 'telegramChatId'> {}
 
 export class Driver extends Model<DriverAttributes, DriverCreation> implements DriverAttributes {
   declare id: string;
@@ -21,6 +25,10 @@ export class Driver extends Model<DriverAttributes, DriverCreation> implements D
   declare passwordHash: string;
   declare status: DriverAttributes['status'];
   declare isAvailable: boolean;
+  declare telegramUserId: string | null;
+  declare telegramChatId: string | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 Driver.init(
@@ -32,6 +40,8 @@ Driver.init(
     passwordHash: { type: DataTypes.STRING(255), allowNull: false },
     status:       { type: DataTypes.ENUM('active', 'suspended', 'inactive'), allowNull: false, defaultValue: 'active' },
     isAvailable:  { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    telegramUserId: { type: DataTypes.STRING(100), allowNull: true, unique: true },
+    telegramChatId: { type: DataTypes.STRING(100), allowNull: true },
   },
-  { sequelize, tableName: 'drivers', underscored: true },
+  { sequelize, tableName: 'drivers', underscored: true, timestamps: true },
 );

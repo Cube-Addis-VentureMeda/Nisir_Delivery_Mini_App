@@ -12,7 +12,7 @@ export interface OrderAttributes {
   driverId: string | null;
   orderType: 'food' | 'store_purchase' | 'customer_parcel' | 'mixed';
   status: OrderStatus;
-  paymentMethod: 'cod' | 'online';
+  paymentMethod: 'cod' | 'online' | 'bank_transfer';
   currency: string;
   subtotal: string;
   companyFoodFeeTotal: string;
@@ -36,8 +36,15 @@ export interface OrderAttributes {
   nonPartnerFeesAccepted: boolean;
   nonPartnerFeesAcceptedAt: Date | null;
   placedAt: Date;
+  confirmedAt?: Date | null;
+  deliveredAt?: Date | null;
+  cancelledAt?: Date | null;
+  cancellationReason?: string | null;
+  idempotencyKey: string | null;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
-export interface OrderCreation extends Optional<OrderAttributes, 'id' | 'placedAt'> {}
+export interface OrderCreation extends Optional<OrderAttributes, 'id' | 'placedAt' | 'idempotencyKey' | 'confirmedAt' | 'deliveredAt' | 'cancelledAt' | 'cancellationReason'> {}
 
 export class Order extends Model<OrderAttributes, OrderCreation> implements OrderAttributes {
   declare id: string;
@@ -46,7 +53,7 @@ export class Order extends Model<OrderAttributes, OrderCreation> implements Orde
   declare driverId: string | null;
   declare orderType: OrderAttributes['orderType'];
   declare status: OrderStatus;
-  declare paymentMethod: 'cod' | 'online';
+  declare paymentMethod: 'cod' | 'online' | 'bank_transfer';
   declare currency: string;
   declare subtotal: string;
   declare companyFoodFeeTotal: string;
@@ -70,6 +77,13 @@ export class Order extends Model<OrderAttributes, OrderCreation> implements Orde
   declare nonPartnerFeesAccepted: boolean;
   declare nonPartnerFeesAcceptedAt: Date | null;
   declare placedAt: Date;
+  declare confirmedAt: Date | null;
+  declare deliveredAt: Date | null;
+  declare cancelledAt: Date | null;
+  declare cancellationReason: string | null;
+  declare idempotencyKey: string | null;
+  declare createdAt: Date;
+  declare updatedAt: Date;
 }
 
 Order.init(
@@ -83,7 +97,7 @@ Order.init(
       type: DataTypes.ENUM('pending', 'confirmed', 'preparing', 'ready_for_pickup', 'out_for_delivery', 'delivered', 'cancelled'),
       allowNull: false, defaultValue: 'pending',
     },
-    paymentMethod: { type: DataTypes.ENUM('cod', 'online'), allowNull: false },
+    paymentMethod: { type: DataTypes.ENUM('cod', 'online', 'bank_transfer'), allowNull: false },
     currency: { type: DataTypes.CHAR(3), allowNull: false, defaultValue: 'ETB' },
     subtotal:                      { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     companyFoodFeeTotal:           { type: DataTypes.DECIMAL(12, 2), allowNull: false },
@@ -107,6 +121,11 @@ Order.init(
     nonPartnerFeesAccepted:    { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     nonPartnerFeesAcceptedAt:  { type: DataTypes.DATE, allowNull: true },
     placedAt: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
+    confirmedAt: { type: DataTypes.DATE, allowNull: true },
+    deliveredAt: { type: DataTypes.DATE, allowNull: true },
+    cancelledAt: { type: DataTypes.DATE, allowNull: true },
+    cancellationReason: { type: DataTypes.TEXT, allowNull: true },
+    idempotencyKey: { type: DataTypes.STRING(100), allowNull: true, unique: true },
   },
-  { sequelize, tableName: 'orders', underscored: true },
+  { sequelize, tableName: 'orders', underscored: true, timestamps: true },
 );

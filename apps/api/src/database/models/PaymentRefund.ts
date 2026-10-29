@@ -10,6 +10,7 @@ export interface PaymentRefundAttributes {
   status: string;
   reason: string | null;
   completedAt: Date | null;
+  createdAt?: Date;
 }
 export interface PaymentRefundCreation extends Optional<PaymentRefundAttributes, 'id'> {}
 
@@ -22,6 +23,7 @@ export class PaymentRefund extends Model<PaymentRefundAttributes, PaymentRefundC
   declare status: string;
   declare reason: string | null;
   declare completedAt: Date | null;
+  declare createdAt: Date;
 }
 
 PaymentRefund.init(
@@ -34,5 +36,5 @@ PaymentRefund.init(
     reason:   { type: DataTypes.TEXT, allowNull: true },
     completedAt: { type: DataTypes.DATE, allowNull: true },
   },
-  { sequelize, tableName: 'payment_refunds', underscored: true, updatedAt: false },
+  { sequelize, tableName: 'payment_refunds', underscored: true, timestamps: true, updatedAt: false },
 );

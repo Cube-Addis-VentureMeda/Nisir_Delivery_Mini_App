@@ -23,9 +23,9 @@ export default {
         allowNull: false, defaultValue: 'pending',
       },
       payment_reference:    { type: DataTypes.STRING(100), allowNull: true, unique: true },
-      // Issue #10: frozen copy of the destination at approval time — history can't be rewritten
-      // by later account edits
-      destination_snapshot: { type: DataTypes.TEXT, allowNull: true },
+      // Frozen copy of the destination at approval. New payouts always write a snapshot;
+      // the service rejects creation without a verified account.
+      destination_snapshot: { type: DataTypes.TEXT, allowNull: false },
       approved_by_staff_id: {
         type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
         references: { model: 'staff_users', key: 'id' },

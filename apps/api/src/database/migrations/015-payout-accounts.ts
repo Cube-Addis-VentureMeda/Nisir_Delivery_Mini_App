@@ -9,12 +9,12 @@ export default {
       merchant_id: {
         type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
         references: { model: 'merchants', key: 'id' },
-        onUpdate: 'CASCADE', onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT', onDelete: 'RESTRICT',
       },
       driver_id: {
         type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
         references: { model: 'drivers', key: 'id' },
-        onUpdate: 'CASCADE', onDelete: 'RESTRICT',
+        onUpdate: 'RESTRICT', onDelete: 'RESTRICT',
       },
       method: {
         type: DataTypes.ENUM('bank_transfer', 'telebirr'),
@@ -34,12 +34,18 @@ export default {
       updated_at: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW },
     });
 
+    // Requires MySQL 8.0.16+ for CHECK enforcement and 5.7.6+ for generated columns.
+    // default_owner_key includes owner type so merchant 12 and driver 12 can both have defaults.
     await queryInterface.sequelize.query(`
       ALTER TABLE payout_accounts
       ADD CONSTRAINT chk_exactly_one_owner
         CHECK ((merchant_id IS NULL) != (driver_id IS NULL)),
-      ADD COLUMN default_owner_key BIGINT UNSIGNED
-        GENERATED ALWAYS AS (IF(is_default = 1, COALESCE(merchant_id, driver_id), NULL)) VIRTUAL,
+      ADD COLUMN default_owner_key VARCHAR(32)
+        GENERATED ALWAYS AS (
+          IF(is_default = 1,
+            CONCAT(IF(merchant_id IS NOT NULL, 'M', 'D'), COALESCE(merchant_id, driver_id)),
+            NULL)
+        ) VIRTUAL,
       ADD UNIQUE KEY uq_default_payout_account (default_owner_key)
     `);
   },

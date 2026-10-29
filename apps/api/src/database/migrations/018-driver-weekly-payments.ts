@@ -26,6 +26,11 @@ export default {
       },
       payment_reference:    { type: DataTypes.STRING(100), allowNull: true, unique: true },
       destination_snapshot: { type: DataTypes.TEXT, allowNull: true },
+      generated_by_staff_id: {
+        type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
+        references: { model: 'staff_users', key: 'id' },
+        onUpdate: 'CASCADE', onDelete: 'SET NULL',
+      },
       paid_by_staff_id: {
         type: DataTypes.BIGINT.UNSIGNED, allowNull: true,
         references: { model: 'staff_users', key: 'id' },

@@ -12,6 +12,7 @@ export interface OrderItemAttributes {
   lineTotal: string;
   companyFoodFee: string;
   instructions: string | null;
+  createdAt?: Date;
 }
 export interface OrderItemCreation extends Optional<OrderItemAttributes, 'id'> {}
 
@@ -25,6 +26,7 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreation> imp
   declare lineTotal: string;
   declare companyFoodFee: string;
   declare instructions: string | null;
+  declare createdAt: Date;
 }
 
 OrderItem.init(
@@ -39,5 +41,5 @@ OrderItem.init(
     companyFoodFee: { type: DataTypes.DECIMAL(12, 2), allowNull: false },
     instructions:   { type: DataTypes.TEXT, allowNull: true },
   },
-  { sequelize, tableName: 'order_items', underscored: true, updatedAt: false }, // ERD shows no updated_at on order_items
+  { sequelize, tableName: 'order_items', underscored: true, timestamps: true, updatedAt: false },
 );
